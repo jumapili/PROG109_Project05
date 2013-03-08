@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="author" content="Jumapili A.D. Ikuseghan - 950616048" />
+<meta name="description" content="Programming 109 - Project 5" />
+<meta name="editor" content="DreamWeaver CS6" />
+<title>Program 109 Project 5</title>
+<style type="text/css">
+  div.whole {
+	position: relative;
+    width: 639px;
+    height: 514px;
+    top: 0px;
+    left: 0px;
+  }
+  div.upperPart {
+    position: absolute;
+    width: 213px;
+    height: 257px;
+    background-repeat: no-repeat;
+    top: 0px;
+  }
+  div.lowerPart {
+    position: absolute;
+    width: 213px;
+    height: 257px;
+    background-repeat: no-repeat;
+    top: 257px;
+  }
+  div.filler {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    top: 0px;
+    left: 0px;
+  }
+</style>
+<script type="text/javascript">
+
+var tileWidth = 213; // tile width, required for positioning
+var tileColor = ["blue", "pink"]; // tile colors
+var tries = 0; // number of opened tiles so far
+var answer = "website"; // no whitespace, lower case for simpler comparison with the user's guess
+
+function loadTiles() {
+    var count = 0;
+    var fillers = document.getElementsByClassName("filler");
+    for (var i = 0; i < fillers.length; ++i) {
+        if (fillers[i].nodeName != "DIV") // skip all non-div elements
+            continue;
+        fillers[i].style.backgroundColor = tileColor[count % 2];
+        fillers[i].style.cursor = "pointer";
+        fillers[i].onclick = function() {
+            ++tries;
+            this.style.backgroundColor = "transparent"; // "this" here refers to the clicked tile
+            this.style.cursor = "auto";
+            this.onclick = null; // remove the handler so that we don't count accidental clicks
+        }
+        ++count;
+    }
+    var frame = document.getElementsByClassName("whole")[0];
+    count = 0;
+    for (var i = 0; i < frame.childNodes.length; ++i) {
+        if (frame.childNodes[i].nodeName != "DIV")
+            continue;
+        // image parts are loaded as div backgrounds
+        frame.childNodes[i].style.backgroundImage = "url('images/" + frame.childNodes[i].id.substring(1) + "jumapili.jpeg')";
+            // proper positioning
+        frame.childNodes[i].style.left = ((count % 3) * tileWidth) + "px";
+        ++count;
+    }
+}
+
+function jumapili() {
+    var guess = document.getElementById("guess");
+    // trim whitespace at the beginning and the end of the input; bring it to lower case
+    if (guess.value.replace(/^\s+|\s+$/g, "").toLowerCase() == answer)
+        alert("Correct! Tries used: " + tries);
+    else
+        alert("Sorry! The answer is: " + answer + "\nTries used: " + tries);
+    // reset everything
+    tries = 0;
+    loadTiles();
+    guess.value = "";
+}
+
+</script>
+</head>
+
+<body onload="loadTiles();">
+
+<h1>What Am I?</h1>
+<p>Click on boxes to reveal hints.</p>
+<div class="whole">
+  <div class="upperPart" id="t01"><div class="filler"></div></div>
+  <div class="upperPart" id="t02"><div class="filler"></div></div>
+  <div class="upperPart" id="t03"><div class="filler"></div></div>
+  <div class="lowerPart" id="t04"><div class="filler"></div></div>
+  <div class="lowerPart" id="t05"><div class="filler"></div></div>
+  <div class="lowerPart" id="t06"><div class="filler"></div></div>
+</div>
+
+<p>Enter your guess: <input type="text" id="guess"/> <input type="button" value="check" onclick="jumapili();"/></p>
+<p>Hint: website</p>
+
+</body>
+</html>
